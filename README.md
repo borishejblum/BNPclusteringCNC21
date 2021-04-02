@@ -13,6 +13,7 @@ Please make sure you have `R (v>= 4.0)` install. You can update it from the [CRA
 For this cours, you will need the following packages:
 
  - `CRPdemo`
+ - `NPflow`
  - `lcmm`
  - `PReMiuM`
 
@@ -22,6 +23,7 @@ They can be installed with the following commands:
 ```{r}
 install.packages("devtools")
 devtools::install_github("borishejblum/CRPdemo")
+install.packages("NPflow")
 install.packages("lcmmm")
 install.packages("PReMiuM")
 ```
