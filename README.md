@@ -28,5 +28,10 @@ install.packages("lcmmm")
 install.packages("PReMiuM")
 ```
 
+## Course feedback
+
+Please give your feedback on the class in the following anonymous form:
+https://forms.gle/2zEjVhK14tBN63oG6
+
 ----
 Boris Hejblum & Anaïs Rouanet
