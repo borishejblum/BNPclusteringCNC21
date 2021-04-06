@@ -10,11 +10,15 @@ This repository contains ressources for the short course on *Bayesian non-parame
 
 Please make sure you have `R (v>= 4.0)` install. You can update it from the [CRAN](https://cran.r-project.org/)
 
-For this cours, you will need the following packages:
+For this course, you will need the following packages:
 
+ - `coda`
  - `CRPdemo`
- - `NPflow`
+ - `expm`
+ - `ggplot2`
  - `lcmm`
+ - `NormPsy`
+ - `NPflow`
  - `PReMiuM`
 
 
