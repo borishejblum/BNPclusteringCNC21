@@ -28,7 +28,7 @@ install.packages("lcmmm")
 install.packages("PReMiuM")
 ```
 
-Class schedule
+##Class schedule
 
  - 9h-10h: [Lecture part I](https://raw.githubusercontent.com/borishejblum/BNPclusteringCNC21/main/BNPclustering_part1.html) 🤓
  
