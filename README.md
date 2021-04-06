@@ -28,6 +28,20 @@ install.packages("lcmmm")
 install.packages("PReMiuM")
 ```
 
+Class schedule
+
+ - 9h-10h: [Lecture part I](https://raw.githubusercontent.com/borishejblum/BNPclusteringCNC21/main/BNPclustering_part1.html) 🤓
+ 
+ - 10h-10h15: _break_ 🥳
+ 
+ - 10h15-10h45: practicals 1 🧑‍💻
+ 
+ - 10h45-11h15: [Lecture part II](https://github.com/borishejblum/BNPclusteringCNC21/raw/main/Bayesian_NP_clustering_part2.pdf) 🤓
+ 
+ - 11h15-11h30: _break_ 🥳
+ 
+ - 11h30-12h30: [practicals 2](https://raw.githubusercontent.com/borishejblum/BNPclusteringCNC21/main/Practical_Part2.Rmd) 🧑‍💻
+
 ## Course feedback
 
 Please give your feedback on the class in the following anonymous form:
