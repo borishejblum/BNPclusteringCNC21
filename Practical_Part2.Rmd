@@ -25,6 +25,7 @@ library("ggplot2")
 
 source("functions_to_load.R")
 ```
+In your working directory, create 5 folders with names: nMMSE, alpha, pred, multiple_chains, labelswitching.
 
 # Paquid Dataset
 
@@ -162,7 +163,7 @@ plotPredictions(outfile = "./pred/predictiveDensity.pdf",
 
 # Multiple chains
 
-To assess convergence, we can run different chains and compare the posterior similarity matrices or traces across chains. 
+Run different chains and compare the posterior similarity matrices or traces across chains. 
 
 ```{r multipleChains, results="hide", warning=FALSE, out.width='100%', fig.align='center', dev='png'}
 
@@ -225,7 +226,7 @@ p_logP <- ggplot(datag) +
 ```
 
 # Prior for alpha
-Let's look closer at the priors, especially the concentration parameter. By default, $\alpha$ is random. Run the model setting $\alpha$ to 20.
+Let's look closer at the priors, especially the concentration parameter. By default, $\alpha$ is random. Run the model setting $\alpha$ to 3.
 
 ```{r alpha, results='hide'}
 mod_nMMSE_alpha<-profRegr(yModel="Normal", # model type for the outcome
@@ -245,16 +246,25 @@ mod_nMMSE_alpha<-profRegr(yModel="Normal", # model type for the outcome
 
 dissimObj <- calcDissimilarityMatrix(mod_nMMSE_alpha) 
 myheatDissMat(dissimObj, order = PSM1$rowInd)
-clusObj <- calcOptimalClustering(dissimObj) 
-riskProfileObj <- calcAvgRiskAndProfile(clusObj)
+clusObj_alpha <- calcOptimalClustering(dissimObj) 
+riskProfileObj <- calcAvgRiskAndProfile(clusObj_alpha)
 clusterOrderObj <- plotRiskProfile(riskProfileObj, "./alpha/Cluster_profiles.png")
 ```
 ```{r alpha2, out.width='70%', fig.align='center', dev='png'}
+table(clusObj1$clustering, clusObj_alpha$clustering)
+
+nClusChain <- mcmc(read.table("./alpha/output_nClusters.txt")[, 1])
+getmode(nClusChain)
+3*log(1+500/3)
 nClus <- plot_trace(mod_nMMSE_alpha, "nClusters", plot=TRUE)
-#hist(nClus, main="", xlab="nClusters")
 ```
 
-Different label switching modes are available, in order to assure a good mixing of the classes. The first move (123) ...
+Different label switching modes are available, in order to ensure a good mixing of the classes:
+
+* Move 1: swap labels of 2 randomly selected non-empty clusters
+* Move 2: swap labels of 2 randomly selected neighbouring clusters, also swapping the v at the same time (Papaspiliopoulos and Roberts, 2008)
+* Move 3: the idea is to simultaneously propose an update of the new cluster weights so they are something like their expected value conditional upon the new allocations (Hastie, Liverani, and Richardson, 2014).
+
 
 ```{r label12, results='hide'}
 whichLabelSwitch <- c("12", "3")
@@ -262,8 +272,8 @@ mod_LS <- list()
 clus_LS <- list()
 
 for(i in 1:length(whichLabelSwitch)){
-  mod<-profRegr(yModel="Normal", # model type for the outcome
-                xModel="Mixed", # model type for the covariates
+  mod<-profRegr(yModel="Normal", 
+                xModel="Mixed", 
                 nSweeps=10000, 
                 nClusInit=20,
                 nBurn=2000, 
@@ -290,7 +300,7 @@ for(i in 1:length(whichLabelSwitch)){
 }
 ```
 
-We want to compare the clusterings:
+Compare the clusterings obtained with the very first one (model mod_nMMSE_1):
 
 ```{r clust_comp}
 table(clusObj1$clustering, clus_LS[[1]]$clustering)
