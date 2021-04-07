@@ -43,7 +43,7 @@ devtools::install_github("borishejblum/CRPdemo")
  
  - 10h-10h15: _break_ 🥳
  
- - 10h15-10h45: [practicals 1](https://raw.githubusercontent.com/borishejblum/BNPclusteringCNC21/main/Practical_Part1.Rmd) 🧑‍💻
+ - 10h15-10h45: [practicals 1](https://raw.githubusercontent.com/borishejblum/BNPclusteringCNC21/main/BNPclustering_Practicals1.Rmd) 🧑‍💻
  
  - 10h45-11h15: [Lecture part II](https://github.com/borishejblum/BNPclusteringCNC21/raw/main/Bayesian_NP_clustering_part2.pdf) 🤓
  
