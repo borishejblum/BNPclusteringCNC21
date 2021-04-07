@@ -20,16 +20,23 @@ For this course, you will need the following packages:
  - `NormPsy`
  - `NPflow`
  - `PReMiuM`
+ - `viridis`
 
 
 They can be installed with the following commands:
 
 ```{r}
+install.packages("coda")
+install.packages("expm")
+install.packages("ggplot2")
+install.packages("lcmm")
+install.packages("NormPsy")
+install.packages("NPflow")
+install.packages("PReMiuM")
+install.packages("viridis")
+
 install.packages("devtools")
 devtools::install_github("borishejblum/CRPdemo")
-install.packages("NPflow")
-install.packages("lcmmm")
-install.packages("PReMiuM")
 ```
 
 ##Class schedule
