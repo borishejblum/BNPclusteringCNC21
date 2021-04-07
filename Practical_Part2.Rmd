@@ -259,7 +259,7 @@ getmode(nClusChain)
 nClus <- plot_trace(mod_nMMSE_alpha, "nClusters", plot=TRUE)
 ```
 
-Different label switching modes are available, in order to ensure a good mixing of the classes:
+Different label switching modes are available, in order to ensure a good mixing of the orderings:
 
 * Move 1: swap labels of 2 randomly selected non-empty clusters
 * Move 2: swap labels of 2 randomly selected neighbouring clusters, also swapping the v at the same time (Papaspiliopoulos and Roberts, 2008)
