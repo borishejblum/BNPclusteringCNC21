@@ -33,8 +33,8 @@ n <- 100 # datasize
 set.seed(1231)
 
 # Sample data
-m <- matrix(nrow=2, ncol=4, c(-1, 1, 0, 2, 1, -2, -1, -2))
-p <- c(0.2, 0.1, 0.4, 0.3) # frequence des clusters
+m <- matrix(nrow=2, ncol=4, c(-1, 1, 0, 2, 1, -2, -1, -2)) # cluster means
+p <- c(0.2, 0.1, 0.4, 0.3) # cluster frequency
 
 library(expm)
 s <- array(dim=c(2,2,4))
@@ -45,7 +45,7 @@ s[, ,4] <- .1*diag(2)
 c <- rep(0,n)
 z <- matrix(0, nrow=2, ncol=n)
 for(k in 1:n){
-    c[k] = which(rmultinom(n=1, size=1, prob=p)!=0)
+    c[k] = which(rmultinom(n=1, size=1, prob=p)!=0) #sampling latent cluster allocation from multinomial
     z[,k] <- m[, c[k]] + expm::sqrtm(s[, , c[k]])%*%matrix(rnorm(2, mean = 0, sd = 1), nrow=2, ncol=1)
 }
 
@@ -58,23 +58,25 @@ plot(t(z), pch=16, xlim=c(-3,3), ylim=c(-3,3), xlab="Dim 1", ylab="Dim 2")
 
 We first need to define prior distribution and set hyper parameters.
 ```{r hyper}
-hyperG0 <- list()
-hyperG0[["mu"]] <- c(0,0)
-hyperG0[["kappa"]] <- 1
-hyperG0[["nu"]] <- 4
-hyperG0[["lambda"]] <- diag(2)
-# Scale parameter of DPM
-alpha <- 2
+hyperA0 <- list()
+hyperA0[["mu"]] <- c(0,0) # rowMeans(z)   
+hyperA0[["kappa"]] <- 1
+hyperA0[["nu"]] <- nrow(z) + 2
+hyperA0[["lambda"]] <- diag(2)
 
-#number f iteration
-N <- 5 #15
+# Concentration parameter of DPM
+alpha <- 1
+alpha*log(n) # expected number of clusters
+
+# Number of MCMC iterations
+N <- 15
 ```
 
 
 ### Polya Urn representation
 
 ```{r Polya, animation.hook='gifski', interval=0.02, results='hide'}
-gibbsDPMalgo1(z, hyperG0, alpha, niter = N, doPlot = TRUE) #, pause = 0
+gibbsDPMalgo1(z, hyperA0, alpha, niter = N, doPlot = TRUE) #, pause = 0
 ```
 
 Try increasing the number of iterations
@@ -83,25 +85,25 @@ Try increasing the number of iterations
 ### Chinese Restaurant Process representation
 
 ```{r CRP, animation.hook='gifski', interval=0.02, results='hide'}
-gibbsDPMalgo2(z, hyperG0, alpha, niter = N, doPlot = TRUE) #, pause = 0
+gibbsDPMalgo2(z, hyperA0, alpha, niter = N, doPlot = TRUE) #, pause = 0
 ```
 
 Now let's try to change alpha and see how it impacts the algorithm
 
 ```{r alpha1, animation.hook='gifski', interval=0.02, results='hide'}
-gibbsDPMalgo2(z, hyperG0, alpha = 0.0001, niter=N, doPlot=TRUE) #, pause = 0
+gibbsDPMalgo2(z, hyperA0, alpha = 0.0001, niter=N, doPlot=TRUE) #, pause = 0
 ```
 
 
 ```{r alpha3, animation.hook='gifski', interval=0.02, results='hide'}
-gibbsDPMalgo2(z, hyperG0, alpha = 30, niter=N, doPlot=TRUE) #, pause = 0
+gibbsDPMalgo2(z, hyperA0, alpha = 30, niter=N, doPlot=TRUE) #, pause = 0
 ```
 
-Another important parameter is the prior on the variance of each cluster in the base distribution $\mathcal{A}_0$. Let us increase this variance and see how it impacts the lagorithm:
+Another important parameter is the prior on the variance of each cluster in the base distribution $\mathcal{A}_0$. Let us increase this variance and see how it impacts the algorithm:
 
 ```{r lambda, animation.hook='gifski', interval=0.02, results='hide'}
-hyperG0[["lambda"]] <- 100*diag(2)
-expr = gibbsDPMalgo2(z, hyperG0, alpha = 2, niter=N, doPlot=TRUE) #, pause = 0
+hyperA0[["lambda"]] <- 100*diag(2)
+expr = gibbsDPMalgo2(z, hyperA0, alpha = 2, niter=20, doPlot=TRUE, pause = 0)
 ```
 
 
@@ -111,8 +113,8 @@ Now we are going to use the package `NPflow`
 
 ```{r NPflow, animation.hook='gifski', interval=0.5, message = FALSE, results='hide'}
 ?DPMGibbsN
-hyperG0[["lambda"]] <- diag(2)/10
-MCMCsample <- DPMGibbsN(z, hyperG0, a=0.001, b=0.001, N=500, doPlot = TRUE, 
+hyperA0[["lambda"]] <- diag(2)/10
+MCMCsample <- DPMGibbsN(z, hyperA0, a=0.001, b=0.001, N=500, doPlot = TRUE, 
                         nbclust_init=30, plotevery=100, diagVar=FALSE)
 ```
 
@@ -178,27 +180,23 @@ ggplot(data.frame("X"=z[1,], "Y"=z[2,], "Cluster"=as.character(c2plot))) +
     scale_colour_discrete(guide=guide_legend(override.aes = list(size = 6, shape=22)))
 
 
-# Set parameters of G0
-hyperG0 <- list()
-hyperG0[["b_xi"]] <- rowMeans(z)
-hyperG0[["b_psi"]] <- rep(0,d)
-hyperG0[["kappa"]] <- 0.001
-hyperG0[["D_xi"]] <- 100
-hyperG0[["D_psi"]] <- 100
-hyperG0[["nu"]] <- d+1
-hyperG0[["lambda"]] <- diag(apply(z,MARGIN=1, FUN=var))/3
-
-# hyperprior on the Scale parameter of DPM
-a <- 0.0001
-b <- 0.0001
+# Set parameters of A0
+hyperA0 <- list()
+hyperA0[["b_xi"]] <- rowMeans(z)
+hyperA0[["b_psi"]] <- rep(0,d)
+hyperA0[["kappa"]] <- 0.001
+hyperA0[["D_xi"]] <- 100
+hyperA0[["D_psi"]] <- 100
+hyperA0[["nu"]] <- d+1
+hyperA0[["lambda"]] <- diag(apply(z,MARGIN=1, FUN=var))/3
 ```
 
 
 ```{r skew-t-NPflow, animation.hook='gifski', interval=0.5, message = FALSE, warning=FALSE, results='hide'}
 # Gibbs sampler for Dirichlet Process Mixtures
-MCMCsample_st <- DPMGibbsSkewT(z, hyperG0, a, b, N=1500,
-                               doPlot=TRUE, nbclust_init=30, plotevery=100,
-                               diagVar=FALSE)
+MCMCsample_st <- DPMGibbsSkewT(z, hyperA0, a = 0.0001, b = 0.0001, N = 1500,
+                               doPlot = TRUE, nbclust_init = 30, 
+                               plotevery = 100, diagVar = FALSE)
 ```
 
 
