@@ -15,7 +15,6 @@ For this course, you will need the following packages:
  - `coda`
  - `CRPdemo`
  - `expm`
- - `ggplot2`
  - `lcmm`
  - `NormPsy`
  - `NPflow`
@@ -28,7 +27,6 @@ They can be installed with the following commands:
 ```{r}
 install.packages("coda")
 install.packages("expm")
-install.packages("ggplot2")
 install.packages("lcmm")
 install.packages("NormPsy")
 install.packages("NPflow")
@@ -45,7 +43,7 @@ devtools::install_github("borishejblum/CRPdemo")
  
  - 10h-10h15: _break_ 🥳
  
- - 10h15-10h45: practicals 1 🧑‍💻
+ - 10h15-10h45: [practicals 1](https://raw.githubusercontent.com/borishejblum/BNPclusteringCNC21/main/Practical_Part1.Rmd) 🧑‍💻
  
  - 10h45-11h15: [Lecture part II](https://github.com/borishejblum/BNPclusteringCNC21/raw/main/Bayesian_NP_clustering_part2.pdf) 🤓
  
