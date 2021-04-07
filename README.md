@@ -37,7 +37,7 @@ install.packages("devtools")
 devtools::install_github("borishejblum/CRPdemo")
 ```
 
-##Class schedule
+## Class schedule
 
  - 9h-10h: [Lecture part I](https://raw.githubusercontent.com/borishejblum/BNPclusteringCNC21/main/BNPclustering_part1.html) 🤓
  
